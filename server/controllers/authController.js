@@ -2,6 +2,7 @@ import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
+import Token from '../models/token.js';
 
 const generateToken = (id, role) => {
     return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -25,8 +26,12 @@ export const login = async (req, res) => {
 
 export const sendRegistrationEmail = async (req, res) => {
     const { email } = req.body;
+
     try {
         const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '3h' });
+        const expiresAt = new Date(Date.now() + 3 * 60 * 60 * 1000); // 3 hours
+
+        await Token.create({ token, email, expiresAt });
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.mailtrap.io',
@@ -47,22 +52,48 @@ export const sendRegistrationEmail = async (req, res) => {
         await transporter.sendMail(mailOptions);
         res.json({ message: 'Registration email sent' });
     } catch (error) {
+        console.error('Error sending email:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 export const register = async (req, res) => {
-    const { token, username, password, role } = req.body;
+    const { token, username, password } = req.body;
+
     try {
+        // Check if token exists and is valid
+        const tokenEntry = await Token.findOne({ token });
+        if (!tokenEntry || tokenEntry.status !== 'valid' || new Date() > tokenEntry.expiresAt) {
+            return res.status(401).json({ message: 'Invalid or expired token' });
+        }
+
+        // Decode the token to get the email
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const email = decoded.email;
 
+        // Check if the user already exists
         const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ message: 'User already exists' });
+        if (userExists) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
 
-        const newUser = await User.create({ username, email, password, role });
+        // Create the new user
+        const newUser = await User.create({
+            username,
+            email,
+            password,
+            role: 'employee',
+        });
+
+        // Mark the token as used
+        tokenEntry.status = 'used';
+        await tokenEntry.save();
+
         res.status(201).json({ message: 'User registered successfully', user: newUser });
     } catch (error) {
-        res.status(500).json({ message: 'Invalid or expired token' });
+        console.error('Error during registration:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
+
+
