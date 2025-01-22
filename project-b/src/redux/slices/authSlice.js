@@ -5,6 +5,8 @@ import axios from 'axios';
 export const login = createAsyncThunk('auth/login', async (credentials, { rejectWithValue }) => {
     try {
         const response = await axios.post('http://localhost:3001/auth/login', credentials);
+        const { token, role } = response.data;
+        localStorage.setItem('jwt', token);
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -15,7 +17,7 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: {
         user: null,
-        token: null,
+        token: localStorage.getItem('jwt') || null,
         loading: false,
         error: null,
     },
@@ -23,6 +25,7 @@ const authSlice = createSlice({
         logout: (state) => {
             state.user = null;
             state.token = null;
+            localStorage.removeItem('jwt');
         },
     },
     extraReducers: (builder) => {
@@ -37,8 +40,8 @@ const authSlice = createSlice({
                 state.token = action.payload.token;
 
                 // Store the token in localStorage
-                localStorage.setItem('jwt', action.payload.token);
-                localStorage.setItem('user', JSON.stringify(action.payload.user));
+                // localStorage.setItem('jwt', action.payload.token);
+                // localStorage.setItem('user', JSON.stringify(action.payload.user));
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;

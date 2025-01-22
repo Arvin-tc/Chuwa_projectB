@@ -24,8 +24,7 @@ export const submitOnboarding = createAsyncThunk(
         try {
             const response = await axios.post(`http://localhost:${PORT}/api/onboarding`, formData, {
                 headers: {
-
-                    Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+                                       Authorization: `Bearer ${localStorage.getItem('jwt')}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
