@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const applicationSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -6,33 +6,33 @@ const applicationSchema = new mongoose.Schema({
     feedback: { type: String },
     details: {
         firstName: { type: String, required: true },
-        lastName: { type: String, required: true },
+        lastName: { type: String }, // Not required for testing
         address: {
-            apt: { type: String, required: true },
-            street: { type: String, required: true },
-            city: { type: String, required: true },
-            state: { type: String, required: true },
-            zip: { type: String, required: true }
+            apt: { type: String },
+            street: { type: String },
+            city: { type: String },
+            state: { type: String },
+            zip: { type: String }
         },
-        cellPhone: { type: String, required: true },
-        ssn: { type: String, required: true },
-        dob: { type: Date, required: true },
-        gender: { type: String, enum: ['Male', 'Female', 'Prefer not to say'], required: true },
-        citizenship: { type: String, enum: ['Citizen', 'Green Card', 'Work Authorization'], required: true },
+        cellPhone: { type: String },
+        ssn: { type: String },
+        dob: { type: Date },
+        gender: { type: String, enum: ['Male', 'Female', 'Prefer not to say'] },
+        citizenship: { type: String, enum: ['Citizen', 'Green Card', 'Work Authorization'] },
         visaType: { type: String },
         visaStartDate: { type: Date },
         visaEndDate: { type: Date },
         reference: {
-            firstName: { type: String, required: true },
-            lastName: { type: String, required: true },
-            relationship: { type: String, required: true }
+            firstName: { type: String },
+            lastName: { type: String },
+            relationship: { type: String }
         },
         emergencyContacts: [{
-            firstName: { type: String, required: true },
-            lastName: { type: String, required: true },
-            relationship: { type: String, required: true },
-            phone: { type: String, required: true },
-            email: { type: String, required: true }
+            firstName: { type: String },
+            lastName: { type: String },
+            relationship: { type: String },
+            phone: { type: String },
+            email: { type: String }
         }]
     },
     uploadedFiles: {

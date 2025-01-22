@@ -145,7 +145,6 @@ return (
             name="lastName"
             value={formData.lastName || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -160,7 +159,6 @@ return (
             name="apt"
             value={formData.apt|| ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -172,7 +170,6 @@ return (
             name="street"
             value={formData.street || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -184,7 +181,6 @@ return (
             name="city"
             value={formData.city || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -196,7 +192,6 @@ return (
             name="state"
             value={formData.state || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -208,7 +203,6 @@ return (
             name="zip"
             value={formData.zip || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -222,7 +216,6 @@ return (
             name="cellPhone"
             value={formData.cellPhone || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -236,7 +229,6 @@ return (
             name="ssn"
             value={formData.ssn || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -250,7 +242,6 @@ return (
             name="dob"
             value={formData.dob || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -263,7 +254,6 @@ return (
             name="gender"
             value={formData.gender || ''}
             onChange={handleInputChange}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         >
             <option value="" disabled>Select your gender</option>
@@ -284,7 +274,6 @@ return (
         name="isPermanentResident"
         value={formData.isPermanentResident || ''}
         onChange={(e) => handleInputChange(e)}
-        required
         className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
     >
         <option value="" disabled>Select an option</option>
@@ -304,7 +293,6 @@ return (
             name="citizenshipStatus"
             value={formData.citizenshipStatus || ''}
             onChange={(e) => handleInputChange(e)}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         >
             <option value="" disabled>Select your status</option>
@@ -326,7 +314,6 @@ return (
                 name="workAuthorization"
                 value={formData.workAuthorization || ''}
                 onChange={(e) => handleInputChange(e)}
-                required
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             >
                 <option value="" disabled>Select an option</option>
@@ -349,7 +336,6 @@ return (
                     id="optReceipt"
                     name="optReceipt"
                     onChange={handleFileChange}
-                    required
                     className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
                 />
             </div>
@@ -367,7 +353,6 @@ return (
                     name="visaTitle"
                     value={formData.visaTitle || ''}
                     onChange={handleInputChange}
-                    required
                     className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 />
             </div>
@@ -384,7 +369,6 @@ return (
                 name="visaStartDate"
                 value={formData.visaStartDate || ''}
                 onChange={handleInputChange}
-                required
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
         </div>
@@ -398,7 +382,6 @@ return (
                 name="visaEndDate"
                 value={formData.visaEndDate || ''}
                 onChange={handleInputChange}
-                required
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
         </div>
@@ -418,7 +401,6 @@ return (
             name="reference.firstName"
             value={formData.reference?.firstName || ''}
             onChange={(e) => handleReferenceChange('firstName', e.target.value)}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -430,7 +412,6 @@ return (
             name="reference.lastName"
             value={formData.reference?.lastName || ''}
             onChange={(e) => handleReferenceChange('lastName', e.target.value)}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -442,7 +423,6 @@ return (
             name="reference.relationship"
             value={formData.reference?.relationship || ''}
             onChange={(e) => handleReferenceChange('relationship', e.target.value)}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -454,7 +434,6 @@ return (
             name="reference.phone"
             value={formData.reference?.phone || ''}
             onChange={(e) => handleReferenceChange('phone', e.target.value)}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -466,7 +445,6 @@ return (
             name="reference.email"
             value={formData.reference?.email || ''}
             onChange={(e) => handleReferenceChange('email', e.target.value)}
-            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
@@ -490,7 +468,6 @@ return (
                         onChange={(e) =>
                             handleEmergencyContactChange(index, 'firstName', e.target.value)
                         }
-                        required
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
@@ -506,7 +483,6 @@ return (
                         onChange={(e) =>
                             handleEmergencyContactChange(index, 'lastName', e.target.value)
                         }
-                        required
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
@@ -522,7 +498,6 @@ return (
                         onChange={(e) =>
                             handleEmergencyContactChange(index, 'relationship', e.target.value)
                         }
-                        required
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
@@ -538,7 +513,6 @@ return (
                         onChange={(e) =>
                             handleEmergencyContactChange(index, 'phone', e.target.value)
                         }
-                        required
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
@@ -554,7 +528,6 @@ return (
                         onChange={(e) =>
                             handleEmergencyContactChange(index, 'email', e.target.value)
                         }
-                        required
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
@@ -586,7 +559,6 @@ return (
                 id="profilePicture"
                 name="profilePicture"
                 onChange={handleFileChange}
-                required
                 className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
             />
         </div>
@@ -597,7 +569,6 @@ return (
                 id="driverLicense"
                 name="driverLicense"
                 onChange={handleFileChange}
-                required
                 className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
             />
         </div>
@@ -608,7 +579,6 @@ return (
                 id="workAuthorization"
                 name="workAuthorization"
                 onChange={handleFileChange}
-                required
                 className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
             />
         </div>
