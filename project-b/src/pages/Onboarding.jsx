@@ -9,21 +9,71 @@ const Onboarding = () => {
     const dispatch = useDispatch();
     const { status, application, feedback, loading, error } = useSelector((state) => state.onboarding);
 
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({ email: '' });
     const [files, setFiles] = useState({});
 
-    useEffect(() => {
-        dispatch(fetchOnboardingData());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(fetchOnboardingData());
+    // }, [dispatch]);
 
-    const handleInputChange = (e) => { // event obj for onChange event fired
-        const {name, value} = e.target;
-        setFormData((prev) => ({...prev, [name]: value}));
+    // useEffect(() => {
+    //     dispatch(fetchOnboardingData()).then((response) => {
+    //         if(response.payload?.application) {
+    //             setFormData((prev) => ({
+    //                 ...prev,
+    //                 email: response.payload.application.email,
+    //             }));
+    //         } else {
+    //             const userEmail = response.payload?.user?.email;
+    //             setFormData((prev) => ({
+    //                 ...prev,
+    //                 email: userEmail || '',
+    //             }));
+    //         }
+    //     });
+    // }, [dispatch]);
+
+
+useEffect(() => {
+    let isMounted = true;
+
+    dispatch(fetchOnboardingData()).then((response) => {
+        if (isMounted && response.payload?.application) {
+            setFormData((prev) => ({
+                ...prev,
+                email: response.payload.application.email,
+            }));
+        }
+    });
+
+    return () => {
+        isMounted = false; //  prevent side effects
     };
+}, [dispatch]);
 
+
+    // const handleInputChange = (e) => { 
+    //     const {name, value} = e.target;
+    //     setFormData((prev) => ({...prev, [name]: value}));
+    // };
+
+
+const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "isPermanentResident") {
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+            citizenship: value === "No" ? "Work Authorization" : "", // Set "Work Authorization" if not a permanent resident
+        }));
+    } else {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+};
     const handleFileChange = (e) => {
         const { name } = e.target;
-        const file = e.target.files[0];  // input can allow multiple files if the multiple attribute is present
+        const file = e.target.files[0];  // input can allow multiple files
         setFiles((prev) => ({...prev, [name]: file}));
     };
 
@@ -220,6 +270,19 @@ return (
         />
     </div>
 
+{/* Email Field */}
+<div className="mb-4">
+    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email *</label>
+    <input
+        type="email"
+        id="email"
+        name="email"
+        value={formData.email || ''}
+        readOnly
+        className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed"
+    />
+</div>
+
     {/* SSN */}
     <div className="mb-4">
         <label htmlFor="ssn" className="block text-sm font-medium text-gray-700">SSN *</label>
@@ -285,13 +348,13 @@ return (
 {/* If Yes: Show Green Card or Citizen */}
 {formData.isPermanentResident === 'Yes' && (
     <div className="mb-4">
-        <label htmlFor="citizenshipStatus" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="citizenship" className="block text-sm font-medium text-gray-700">
             Please select your status *
         </label>
         <select
-            id="citizenshipStatus"
-            name="citizenshipStatus"
-            value={formData.citizenshipStatus || ''}
+            id="citizenship"
+            name="citizenship"
+            value={formData.citizenship || ''}
             onChange={(e) => handleInputChange(e)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         >
