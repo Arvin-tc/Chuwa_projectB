@@ -7,9 +7,10 @@ import ErrorPage from '../components/ErrorPage';
 
 const Onboarding = () => {
     const dispatch = useDispatch();
-    const { status, application, feedback, loading, error } = useSelector((state) => state.onboarding);
+    const { status, application, feedback, loading, error, email } = useSelector((state) => state.onboarding);
+    console.log('email: ', email);
 
-    const [formData, setFormData] = useState({ email: '' });
+    const [formData, setFormData] = useState({});
     const [files, setFiles] = useState({});
 
     // useEffect(() => {
@@ -35,20 +36,22 @@ const Onboarding = () => {
 
 
 useEffect(() => {
-    let isMounted = true;
+    // let isMounted = true;
+    //
+    // dispatch(fetchOnboardingData()).then((response) => {
+    //     if (isMounted && response.payload?.application) {
+    //         setFormData((prev) => ({
+    //             ...prev,
+    //             email: response.payload.email,
+    //         }));
+    //     }
+    // });
+    //
+    // return () => {
+    //     isMounted = false; //  prevent side effects
+    // };
 
-    dispatch(fetchOnboardingData()).then((response) => {
-        if (isMounted && response.payload?.application) {
-            setFormData((prev) => ({
-                ...prev,
-                email: response.payload.application.email,
-            }));
-        }
-    });
-
-    return () => {
-        isMounted = false; //  prevent side effects
-    };
+    dispatch(fetchOnboardingData());
 }, [dispatch]);
 
 
@@ -58,19 +61,49 @@ useEffect(() => {
     // };
 
 
+
 const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(`name: ${name}, value: ${value}`);
 
-    if (name === "isPermanentResident") {
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-            citizenship: value === "No" ? "Work Authorization" : "", // Set "Work Authorization" if not a permanent resident
-        }));
-    } else {
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    setFormData((prev) => {
+        let updatedFormData = { ...prev, [name]: value };
+
+        if (name === "isPermanentResident") {
+            updatedFormData = {
+                ...updatedFormData,
+                citizenship: value === "No" ? "Work Authorization" : "", 
+                workAuthorization: value === "Yes" ? "" : prev.workAuthorization, 
+                visaType: value === "No" ? prev.workAuthorization || "Work Authorization" : prev.citizenship || "",
+            };
+        }
+
+        if (name === "citizenship" && prev.isPermanentResident === "Yes") {
+            updatedFormData = {
+                ...updatedFormData,
+                visaType: value, 
+            };
+        }
+
+        if (name === "workAuthorization" && prev.isPermanentResident === "No") {
+            updatedFormData = {
+                ...updatedFormData,
+                visaType: value, 
+            };
+        }
+
+        if (name === "visaTitle" && prev.workAuthorization === "Other") {
+            updatedFormData = {
+                ...updatedFormData,
+                visaType: value, 
+            };
+        }
+
+        return updatedFormData;
+    });
 };
+
+
     const handleFileChange = (e) => {
         const { name } = e.target;
         const file = e.target.files[0];  // input can allow multiple files
@@ -146,6 +179,7 @@ const handleReferenceChange = (field, value) => {
     if(loading) return <LoadingPage message="Loading data, please wait..." />;
     if (error) return <ErrorPage message={`Failed to fetch data: ${error?.message || error}`} />;
     console.log('Status:', status);
+    console.log('Form data:', formData);
 
     
 return (
@@ -277,7 +311,7 @@ return (
         type="email"
         id="email"
         name="email"
-        value={formData.email || ''}
+        value={email || ''}
         readOnly
         className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed"
     />

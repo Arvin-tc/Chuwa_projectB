@@ -11,6 +11,7 @@ export const fetchOnboardingData = createAsyncThunk(
                 
                 headers: {Authorization: `Bearer ${localStorage.getItem('jwt')}`},
             });
+            console.log('fetchOnboardingData: ', response.data);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data || 'Error fetching onboarding data');
@@ -43,6 +44,7 @@ const onboardingSlice = createSlice({
         feedback: '',
         loading: false,
         error: null,
+        email: '',
     },
     reducers: {
         resetOnbaordingState: (state) => {
@@ -62,6 +64,7 @@ const onboardingSlice = createSlice({
             .addCase(fetchOnboardingData.fulfilled, (state, action) => {
                 state.loading = false;
                 state.application = action.payload.application || {};
+                state.email = action.payload.email || '';
                 state.feedback = action.payload.feedback || '';
                 state.status = action.payload.status;
             })

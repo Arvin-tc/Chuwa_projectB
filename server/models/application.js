@@ -6,13 +6,13 @@ const applicationSchema = new mongoose.Schema({
     feedback: { type: String },
     details: {
         firstName: { type: String, required: true },
-        lastName: { type: String }, // Not required for testing
+        lastName: { type: String, required: true },
         address: {
-            apt: { type: String },
-            street: { type: String },
-            city: { type: String },
-            state: { type: String },
-            zip: { type: String }
+            apt: { type: String, required: true },
+            street: { type: String, required: true },
+            city: { type: String, required: true },
+            state: { type: String, required: true },
+            zip: { type: String, required: true }
         },
         cellPhone: { type: String },
         ssn: { type: String },
@@ -25,7 +25,10 @@ const applicationSchema = new mongoose.Schema({
         reference: {
             firstName: { type: String },
             lastName: { type: String },
-            relationship: { type: String }
+            relationship: { type: String },
+            phone: { type: String },
+            email: { type: String }
+
         },
         emergencyContacts: [{
             firstName: { type: String },

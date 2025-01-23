@@ -35,11 +35,27 @@ export const submitOnboarding = async (req, res) => {
         console.log(`User ID: ${userId}`);
         console.log('req.body:', req.body);
 
-        // Extract data directly from req.body
+        // Extract address fields
+        const address = {
+            apt: req.body.apt,
+            street: req.body.street,
+            city: req.body.city,
+            state: req.body.state,
+            zip: req.body.zip,
+        };
+
+        // Validate that all required address fields are present
+        const missingAddressFields = Object.entries(address).filter(([key, value]) => !value);
+        if (missingAddressFields.length > 0) {
+            return res.status(400).json({
+                message: `Missing required address fields: ${missingAddressFields.map(([key]) => key).join(', ')}`,
+            });
+        }
+
+        // Extract other fields from req.body
         const {
             firstName,
             lastName,
-            address,
             cellPhone,
             ssn,
             dob,
@@ -90,7 +106,7 @@ export const submitOnboarding = async (req, res) => {
             ...application.details,
             firstName,
             lastName: lastName || "",
-            address: address || {},
+            address,
             cellPhone: cellPhone || "",
             ssn: ssn || "",
             dob: dob || null,
