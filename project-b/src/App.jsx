@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/login';
 import Register from './pages/Register';
 import Onboarding from './pages/Onboarding';
+import PersonalInfo from './pages/PersonalInfo';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 
@@ -13,13 +14,21 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route 
-                    path='/onboarding'
-        element={
-            <ProtectedRoute>
-                <Onboarding />
-            </ProtectedRoute>
-        }
-        />
+                    path="/onboarding"
+                    element={
+                        <ProtectedRoute>
+                            <Onboarding />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route 
+                    path="/personal-info"
+                    element={
+                        <ProtectedRoute>
+                            <PersonalInfo />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </Router>
     );
