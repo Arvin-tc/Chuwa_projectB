@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPersonalInfo, updatePersonalInfo } from '../redux/slices/personalInfoSlice';
 import EditableField from '../components/common/EditableField';
+const PORT = 3001;
 
 const PersonalInfo = () => {
     const dispatch = useDispatch();
-    const { details, loading, error } = useSelector((state) => state.personalInfo);
+    const { details, uploadedFiles, loading, error } = useSelector((state) => state.personalInfo);
 
     useEffect(() => {
         dispatch(fetchPersonalInfo());
@@ -25,10 +26,28 @@ const PersonalInfo = () => {
         handleUpdate(parentField, updatedArray);
     };
 
-    if (loading || !details) return <p>Loading...</p>;
+    const handleDownload = (fileName) => {
+
+        const url = `http://localhost:${PORT}/uploads/${fileName}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handlePreview = (fileName) => {
+
+        const url = `http://localhost:${PORT}/uploads/${fileName}`;
+        window.open(url, '_blank');
+    };
+
+    if (loading || !details || !uploadedFiles) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
     console.log('Personal info:', details);
+    console.log('UploadedFiles:', uploadedFiles);
 
     return (
         <div className="container mx-auto p-6">
@@ -130,6 +149,33 @@ const PersonalInfo = () => {
                         </div>
                     ))}
                 </div>
+<h2>Uploaded Documents</h2>
+            {uploadedFiles ? (
+                <ul>
+                    {Object.entries(uploadedFiles).map(([key, filePath]) => {
+                        const fileName = filePath.split('/').pop();
+                        return (
+                            <li key={key} className="mb-2">
+                                <span className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}: </span>
+                                <button
+                                    className="text-blue-600 underline mr-4"
+                                    onClick={() => handleDownload(fileName)}
+                                >
+                                    Download
+                                </button>
+                                <button
+                                    className="text-blue-600 underline"
+                                    onClick={() => handlePreview(fileName)}
+                                >
+                                    Preview
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            ) : (
+                <p>No documents uploaded.</p>
+            )}
             </div>
         </div>
     );

@@ -26,6 +26,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/auth', authRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/personal-info', personalInfoRoutes);
+app.get('/favicon.ico', (req, res) => res.status(204));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))

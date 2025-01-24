@@ -43,6 +43,7 @@ const personalInfoSlice = createSlice({
     name: 'personalInfo',
     initialState: {
         details: null,
+        uploadedFiles: null,
         loading: false,
         error: null,
     },
@@ -55,7 +56,8 @@ const personalInfoSlice = createSlice({
             })
             .addCase(fetchPersonalInfo.fulfilled, (state, action) => {
                 state.loading = false;
-                state.details = action.payload;
+                state.details = action.payload.details;
+                state.uploadedFiles = action.payload.uploadedFiles;
             })
             .addCase(fetchPersonalInfo.rejected, (state, action) => {
                 state.loading = false;
