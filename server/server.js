@@ -7,6 +7,7 @@ import path from 'path';
 import authRoutes from './routes/authRoutes.js';
 import onboardingRoutes from './routes/onboardingRoutes.js';
 import personalInfoRoutes from './routes/personalInfoRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use('/auth', authRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/personal-info', personalInfoRoutes);
 app.get('/favicon.ico', (req, res) => res.status(204));
+app.use('/api/uploads', uploadRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))

@@ -25,7 +25,9 @@ export const updatePersonalInfo = createAsyncThunk(
     'personalInfo/update',
     async(updates, { rejectWithValue }) => {
         try{
-            const response = await axios.patch(`http://localhost:${PORT}/api/personal-info`, {
+            const response = await axios.patch(`http://localhost:${PORT}/api/personal-info`,
+                updates,
+                {
                 headers: {
                     
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`,

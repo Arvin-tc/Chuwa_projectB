@@ -43,17 +43,49 @@ const PersonalInfo = () => {
         window.open(url, '_blank');
     };
 
+    const handleFileUpload = async (fileType, file) => {
+        try {
+            const formData = new FormData();
+            formData.append('fileType', fileType);
+            formData.append('file', file);
+
+            const response = await fetch(`http://localhost:${PORT}/api/uploads`, {
+                method: 'PATCH',
+                headers: {
+
+                    Authorization: `Bearer ${localStorage.getItem(('jwt'))}`,
+                },
+                body: formData,
+            });
+
+            if(response.ok) {
+                const data = await response.json();
+                console.log('File uploaded successfully:', data);
+                dispatch(fetchPersonalInfo());
+            } else {
+                const error = await response.json();
+                console.error('Error uploading file: ', error);
+            }
+        } catch (err) {
+            console.error('Error handling file upload:', err);
+        }
+    }
+
     if (loading || !details || !uploadedFiles) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
     console.log('Personal info:', details);
     console.log('UploadedFiles:', uploadedFiles);
+    console.log('VisaType:', details.visaType);
+    console.log('Is resident:', details.isPermanentResident);
 
     return (
         <div className="container mx-auto p-6">
             <h1 className="text-2xl font-bold mb-6">Personal Information</h1>
             <div className="bg-white p-6 rounded-md shadow-md space-y-6">
-                {/* General Fields */}
+                {/* Name Section */}
+                <div className="mb-6">
+                    <h2 className="text-lg font-bold">Name</h2>
                 <EditableField
                     label="First Name"
                     value={details.firstName}
@@ -99,6 +131,39 @@ const PersonalInfo = () => {
                     type="date"
                     isEditable
                 />
+            </div>
+
+                {/* Citizenship Section */}
+
+                <div className="mb-6">
+                    <h2 className="text-lg font-bold">Employment</h2>
+                {details.citizenship === 'Work Authorization' && (
+                    <div className="mb-6">
+                        <EditableField
+                            label="Visa Type"
+                            value={details.visaType || ''}
+                            onChange={(value) => handleUpdate('visaType', value)}
+                            type="select"
+                            options={['H1-B', 'L2', 'F1(CPT/OPT)', 'H4', 'Other']}
+                            isEditable
+                        />
+                        <EditableField
+                            label="Start Date"
+                            value={details.visaStartDate ? details.visaStartDate.split('T')[0] : ''}
+                            onChange={(value) => handleUpdate('visaStartDate', value)}
+                            type="date"
+                            isEditable
+                        />
+                        <EditableField
+                            label="End Date"
+                            value={details.visaEndDate ? details.visaEndDate.split('T')[0] : ''}
+                            onChange={(value) => handleUpdate('visaEndDate', value)}
+                            type="date"
+                            isEditable
+                        />
+                    </div>
+                )}
+        </div>
 
                 {/* Address Section */}
                 <div className="mb-6">
@@ -113,6 +178,21 @@ const PersonalInfo = () => {
                         />
                     ))}
                 </div>
+
+                {/* Contact Info Section */}
+                <div className="mb-6">
+                    <h2 className="text-lg font-bold">Contact Info</h2>
+
+                <EditableField
+                    label="Cell Phone"
+                    value={details.cellPhone}
+                    onChange={(value) => handleUpdate('cellPhone', value)}
+                    isEditable
+                />
+
+                </div>
+
+
 
                 {/* Reference Section */}
                 <div className="mb-6">
@@ -149,33 +229,42 @@ const PersonalInfo = () => {
                         </div>
                     ))}
                 </div>
+
+
 <h2>Uploaded Documents</h2>
-            {uploadedFiles ? (
-                <ul>
-                    {Object.entries(uploadedFiles).map(([key, filePath]) => {
-                        const fileName = filePath.split('/').pop();
-                        return (
-                            <li key={key} className="mb-2">
-                                <span className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}: </span>
-                                <button
-                                    className="text-blue-600 underline mr-4"
-                                    onClick={() => handleDownload(fileName)}
-                                >
-                                    Download
-                                </button>
-                                <button
-                                    className="text-blue-600 underline"
-                                    onClick={() => handlePreview(fileName)}
-                                >
-                                    Preview
-                                </button>
-                            </li>
-                        );
-                    })}
-                </ul>
-            ) : (
-                <p>No documents uploaded.</p>
-            )}
+{uploadedFiles ? (
+    <ul>
+        {Object.entries(uploadedFiles).map(([key, filePath]) => {
+            const fileName = filePath.split('/').pop();
+            return (
+                <li key={key} className="mb-2">
+                    <span className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}: </span>
+                    <button
+                        className="text-blue-600 underline mr-4"
+                        onClick={() => handleDownload(fileName)}
+                    >
+                        Download
+                    </button>
+                    <button
+                        className="text-blue-600 underline mr-4"
+                        onClick={() => handlePreview(fileName)}
+                    >
+                        Preview
+                    </button>
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,application/pdf"
+                        onChange={(e) => handleFileUpload(key, e.target.files[0])}
+                        className="block mt-2"
+                    />
+                </li>
+            );
+        })}
+    </ul>
+) : (
+    <p>No documents uploaded.</p>
+)}
+
             </div>
         </div>
     );
