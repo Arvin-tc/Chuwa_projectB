@@ -11,9 +11,14 @@ export const uploadFile = async (req, res) => {
         const userId = req.user.id;
         const fileType = req.body.fileType;
         const filePath = req.file?.path;
+        const isVisaDoc = req.body.isVisaDoc;
 
         if(!fileType || !filePath) {
             return res.status(400).json({ message: 'Invalid file upload request.' });
+        }
+
+        if(isVisaDoc && !['optReceipt', 'optEAD', 'i983', 'i20'].includes(fileType)) {
+            return res.status(400).json({message: 'Invalid visa document type'});
         }
 
         const application = await Application.findOne({userId: userId});

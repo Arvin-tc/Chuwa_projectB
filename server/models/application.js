@@ -42,7 +42,10 @@ const applicationSchema = new mongoose.Schema({
         profilePicture: { type: String },
         driverLicense: { type: String },
         workAuthorization: { type: String },
-        optReceipt: { type: String }
+        optReceipt: { type: String },
+        optEAD: { type: String },
+        i983: { type: String },
+        i20: { type: String }
     }
 }, { timestamps: true });
 
