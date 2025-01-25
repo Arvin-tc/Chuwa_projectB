@@ -31,6 +31,7 @@ app.use('/api/personal-info', personalInfoRoutes);
 app.get('/favicon.ico', (req, res) => res.status(204));
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/visa', visaStatusRoutes);
+app.use('/sample', express.static(path.join(__dirname, 'sample')));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
