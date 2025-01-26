@@ -4,6 +4,7 @@ import { fetchOnboardingData, submitOnboarding } from '../redux/slices/onboardin
 // TODO import Loading & Error page
 import LoadingPage from '../components/LoadingPage';
 import ErrorPage from '../components/ErrorPage';
+import Navbar from '../components/common/NavigationBar';
 
 const Onboarding = () => {
     const dispatch = useDispatch();
@@ -13,52 +14,14 @@ const Onboarding = () => {
     const [formData, setFormData] = useState({});
     const [files, setFiles] = useState({});
 
-    // useEffect(() => {
-    //     dispatch(fetchOnboardingData());
-    // }, [dispatch]);
-
-    // useEffect(() => {
-    //     dispatch(fetchOnboardingData()).then((response) => {
-    //         if(response.payload?.application) {
-    //             setFormData((prev) => ({
-    //                 ...prev,
-    //                 email: response.payload.application.email,
-    //             }));
-    //         } else {
-    //             const userEmail = response.payload?.user?.email;
-    //             setFormData((prev) => ({
-    //                 ...prev,
-    //                 email: userEmail || '',
-    //             }));
-    //         }
-    //     });
-    // }, [dispatch]);
 
 
 useEffect(() => {
-    // let isMounted = true;
-    //
-    // dispatch(fetchOnboardingData()).then((response) => {
-    //     if (isMounted && response.payload?.application) {
-    //         setFormData((prev) => ({
-    //             ...prev,
-    //             email: response.payload.email,
-    //         }));
-    //     }
-    // });
-    //
-    // return () => {
-    //     isMounted = false; //  prevent side effects
-    // };
+
 
     dispatch(fetchOnboardingData());
 }, [dispatch]);
 
-
-    // const handleInputChange = (e) => { 
-    //     const {name, value} = e.target;
-    //     setFormData((prev) => ({...prev, [name]: value}));
-    // };
 
 
 
@@ -184,12 +147,14 @@ const handleReferenceChange = (field, value) => {
     
 return (
     <div className="container mx-auto p-6">
+        <Navbar />
+        <p style={{ marginTop: '50px' }}></p>
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Onboarding Application</h1>
         
         {/* Status: Pending */}
         {status === 'Pending' && (
             <div className="bg-yellow-100 text-yellow-800 p-4 rounded-md mb-6">
-                <p className="text-lg">Your application is under review. Below are the submitted details:</p>
+                <p className="text-lg">Your application is under review. </p>
             </div>
         )}
         
@@ -691,15 +656,7 @@ return (
 </form>
         )}
 
-        {/* Status: Pending - Read-only Application */}
-        {status === 'Pending' && (
-            <div className="bg-gray-50 p-6 rounded-md shadow-md">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">Submitted Details</h2>
-                <pre className="bg-gray-100 p-4 rounded-md text-sm text-gray-800 overflow-x-auto">
-                    {JSON.stringify(application, null, 2)}
-                </pre>
-            </div>
-        )}
+
     </div>
 );
 };
