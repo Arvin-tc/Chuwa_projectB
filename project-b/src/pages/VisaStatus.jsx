@@ -70,14 +70,14 @@ const VisaStatus = () => {
         return null;
     }
 
-    const isDependant = (docType) => {
-        const msg = getDependency(docType);
-        if(msg) {
-            alert(msg);
-            return true;
-        }
-        return false;
-    };
+    // const isDependant = (docType) => {
+    //     const msg = getDependency(docType);
+    //     if(msg) {
+    //         alert(msg);
+    //         return true;
+    //     }
+    //     return false;
+    // };
 
     const renderFileActions = (docType) => (
         <>
@@ -105,7 +105,9 @@ const VisaStatus = () => {
         </>
     );
 
-    const renderI983Templates = () => (
+    const renderI983Templates = () => {
+        const msg = getDependency('i983');
+        return (
         <>
             <div className='mb-4'>
                 <a
@@ -140,16 +142,18 @@ const VisaStatus = () => {
             accept='image/jpeg,image/png,application/pdf'
 
                                 onClick={(e) => {
-                                    if(isDependant(docType)) {
+                                    if(msg) {
+                                        alert(msg);
                                         e.preventDefault();
                                     }
                                 }}
-            onChange={(event) => handleUpload('i983', event.target.files[0])}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-            disabled={isDependant('i983')}
+  className={`block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 ${
+        getDependency('i983') ? 'opacity-50 cursor-not-allowed' : ''
+    }`}
            /> 
         </>
-    );
+);
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -171,13 +175,16 @@ return (
                                     type="file"
                                     accept="image/jpeg,image/png,application/pdf"
                                 onClick={(e) => {
-                                    if(isDependant(docType)) {
+                                    const msg = getDependency(docType);
+                                    if(msg){
                                         e.preventDefault();
+                                        alert(msg);
                                     }
                                 }}
                                     onChange={(event) => handleUpload(docType, event.target.files[0])}
-                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-                                    disabled={isDependant(docType)}
+className={`block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 ${
+        getDependency(docType) ? 'opacity-50 cursor-not-allowed' : ''
+    }`}
                                 />
                             )
                         )}
