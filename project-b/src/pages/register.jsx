@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Input } from '../components/ui/input'; // Using shadcn Input
 import { Button } from '../components/ui/button'; // Using shadcn Button
 
@@ -10,6 +10,16 @@ const Register = () => {
     const [token, setToken] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+
+
+    useEffect(() => {
+        const tokenFromUrl = location.pathname.split('/register/')[1];
+        console.log('token:', tokenFromUrl);
+        if(tokenFromUrl) {
+            setToken(tokenFromUrl);
+        }
+    }, [location]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -79,6 +89,7 @@ const Register = () => {
                         onChange={(e) => setToken(e.target.value)}
                         className="w-full"
                         required
+                        readOnly
                     />
                 </div>
 

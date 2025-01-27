@@ -13,7 +13,7 @@ const App = () => {
         <Router>
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route path="/register/:token" element={<Register />} />
                 <Route 
                     path="/onboarding"
                     element={
