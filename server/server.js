@@ -9,6 +9,7 @@ import onboardingRoutes from './routes/onboardingRoutes.js';
 import personalInfoRoutes from './routes/personalInfoRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import visaStatusRoutes from './routes/visaStatusRoutes.js';
+import hiringManagementRouter from './routes/hiringManagementRoutes.js';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
@@ -26,12 +27,22 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/auth', authRoutes);
+
+// employee
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/personal-info', personalInfoRoutes);
 app.get('/favicon.ico', (req, res) => res.status(204));
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/visa', visaStatusRoutes);
 app.use('/sample', express.static(path.join(__dirname, 'sample')));
+
+// hr
+app.use('/api/hr', hiringManagementRouter);
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Oops something went wrong');
+})
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))

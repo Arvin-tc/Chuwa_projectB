@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchVisaStatus, uploadVisaDoc } from '../redux/slices/visaStatusSlice';
+import Navbar from '../components/common/NavigationBar';
 const PORT = 3001;
 
 const VisaStatus = () => {
@@ -70,14 +71,7 @@ const VisaStatus = () => {
         return null;
     }
 
-    // const isDependant = (docType) => {
-    //     const msg = getDependency(docType);
-    //     if(msg) {
-    //         alert(msg);
-    //         return true;
-    //     }
-    //     return false;
-    // };
+
 
     const renderFileActions = (docType) => (
         <>
@@ -160,6 +154,8 @@ const VisaStatus = () => {
 
 return (
         <div className="container mx-auto p-6">
+            <Navbar />
+            <p style={{ marginTop: '50px' }}/>
             <h1 className="text-2xl font-bold mb-6">Visa Status Management</h1>
             <div className="bg-white p-6 rounded-md shadow-md space-y-6">
                 {['optReceipt', 'optEAD', 'i983', 'i20'].map((docType) => (

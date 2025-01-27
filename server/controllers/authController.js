@@ -25,13 +25,13 @@ export const login = async (req, res) => {
 };
 
 export const sendRegistrationEmail = async (req, res) => {
-    const { email } = req.body;
+    const { email, name } = req.body;
 
     try {
         const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '3h' });
         const expiresAt = new Date(Date.now() + 3 * 60 * 60 * 1000); // 3 hours
 
-        await Token.create({ token, email, expiresAt });
+        await Token.create({ token, email, name, expiresAt });
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.mailtrap.io',
@@ -46,7 +46,7 @@ export const sendRegistrationEmail = async (req, res) => {
             from: '"HR Portal" <no-reply@hrportal.com>',
             to: email,
             subject: 'Employee Registration Link',
-            text: `Click the link below to register:\n\nhttp://localhost:3000/register/${token}`,
+            text: `Hello ${name || ''}, Click the link below to register:\n\nhttp://localhost:5173/register/${token}`,
         };
 
         await transporter.sendMail(mailOptions);
@@ -95,5 +95,6 @@ export const register = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 

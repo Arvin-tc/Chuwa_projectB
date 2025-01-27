@@ -32,6 +32,7 @@ export const getOnboardingStatus = async (req, res) => {
 export const submitOnboarding = async (req, res) => {
     try {
         const userId = req.user.id;
+        const userEmail = req.body.userEmail;
         console.log(`User ID: ${userId}`);
         console.log('req.body:', req.body);
 
@@ -102,6 +103,7 @@ export const submitOnboarding = async (req, res) => {
         }
 
         // Update application fields
+        application.userEmail = userEmail;
         application.details = {
             ...application.details,
             firstName,

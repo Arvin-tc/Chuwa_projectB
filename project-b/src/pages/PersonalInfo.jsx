@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPersonalInfo, updatePersonalInfo } from '../redux/slices/personalInfoSlice';
 import EditableField from '../components/common/EditableField';
+import Navbar from '../components/common/NavigationBar';
 const PORT = 3001;
 
 const PersonalInfo = () => {
@@ -81,6 +82,8 @@ const PersonalInfo = () => {
 
     return (
         <div className="container mx-auto p-6">
+            <Navbar />
+            <p style={{ marginTop: '50px' }}/>
             <h1 className="text-2xl font-bold mb-6">Personal Information</h1>
             <div className="bg-white p-6 rounded-md shadow-md space-y-6">
                 {/* Name Section */}

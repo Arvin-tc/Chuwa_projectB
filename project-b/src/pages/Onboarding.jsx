@@ -17,11 +17,14 @@ const Onboarding = () => {
 
 
 useEffect(() => {
-
-
     dispatch(fetchOnboardingData());
 }, [dispatch]);
 
+    useEffect(() => {
+        if(email) {
+            setFormData((prev) => ({...prev, userEmail: email}));
+        }
+    }, [email]);
 
 
 

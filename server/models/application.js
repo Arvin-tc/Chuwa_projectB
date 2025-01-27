@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const applicationSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userEmail: { type: String },
     status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
     feedback: { type: String },
     details: {
