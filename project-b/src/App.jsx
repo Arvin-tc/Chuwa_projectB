@@ -7,6 +7,8 @@ import PersonalInfo from './pages/PersonalInfo';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 import VisaStatus from './pages/VisaStatus';
+import HrManagement from './pages/HrManagement';
+import ViewApplicationPage from './pages/HrApplicationDetails';
 
 const App = () => {
     return (
@@ -38,6 +40,15 @@ const App = () => {
                         </ProtectedRoute>
                     }
                 />
+                <Route 
+                    path="/hr-management"
+                    element={
+                        <ProtectedRoute>
+                            <HrManagement />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="/application/:applicationId" element={<ViewApplicationPage />} />
             </Routes>
         </Router>
     );

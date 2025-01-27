@@ -21,7 +21,7 @@ const Login = () => {
                 if(userRole === 'employee') {
                     navigate('/onboarding');
                 } else {
-                    navigate('/dashboard');
+                    navigate('/hr-management');
                 }
             }
         });
