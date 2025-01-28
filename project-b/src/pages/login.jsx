@@ -16,7 +16,12 @@ const Login = () => {
         e.preventDefault();
         dispatch(login({ username, password })).then((res) => {
             if (res.type === 'auth/login/fulfilled') {
-                navigate('/dashboard');
+                const userRole = res.payload.role;
+                if (userRole == "hr"){
+                    navigate('/hr/employee-profiles')
+                }else{
+                    navigate('/')
+                }
             }
         });
     };

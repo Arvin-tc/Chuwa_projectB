@@ -79,3 +79,39 @@ export const submitOnboarding = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
+{/* hr used to for onborading */}
+export const getApplicationsByStatus = async (req, res) => {
+    const { status } = req.query;
+  
+    try {
+      const query = status ? { status } : {};
+      const applications = await Application.find(query).populate('userId', 'username email');
+      res.json(applications);
+    } catch (error) {
+      console.error('Error fetching applications:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+  export const updateApplicationStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status, feedback } = req.body;
+  
+    try {
+      const application = await Application.findById(id);
+      if (!application) {
+        return res.status(404).json({ message: 'Application not found' });
+      }
+  
+      application.status = status;
+      if (feedback) application.feedback = feedback;
+  
+      await application.save();
+      res.json({ message: 'Application updated successfully' });
+    } catch (error) {
+      console.error('Error updating application status:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };

@@ -7,6 +7,7 @@ import path from 'path';
 import authRoutes from './routes/authRoutes.js';
 import onboardingRoutes from './routes/onboardingRoutes.js';
 import { fileURLToPath } from 'url';
+import hrOperarionRoutes from './routes/hrOperationRoutes.js'
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/auth', authRoutes);
 app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/hrOperation', hrOperarionRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
