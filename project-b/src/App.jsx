@@ -9,6 +9,7 @@ import './index.css';
 import VisaStatus from './pages/VisaStatus';
 import HrManagement from './pages/HrManagement';
 import ViewApplicationPage from './pages/HrApplicationDetails';
+import HRVisaManagementPage from './pages/HrVisaStatus';
 
 const App = () => {
     return (
@@ -41,6 +42,14 @@ const App = () => {
                     }
                 />
                 <Route 
+                    path="/hr-visa"
+                    element={
+                        <ProtectedRoute>
+                            <HRVisaManagementPage/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route 
                     path="/hr-management"
                     element={
                         <ProtectedRoute>
@@ -48,6 +57,7 @@ const App = () => {
                         </ProtectedRoute>
                     }
                 />
+
                 <Route path="/application/:applicationId" element={<ViewApplicationPage />} />
             </Routes>
         </Router>

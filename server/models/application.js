@@ -39,6 +39,8 @@ const applicationSchema = new mongoose.Schema({
             email: { type: String }
         }]
     },
+    
+    // TODO add status for each file
     uploadedFiles: {
         profilePicture: { type: String },
         driverLicense: { type: String },
