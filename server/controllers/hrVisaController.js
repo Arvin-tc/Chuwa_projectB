@@ -53,6 +53,7 @@ export const hrSendEmailNotification = async(req, res) => {
 
     const { applicationId } = req.params;
 
+    console.log('remidner app:', applicationId);
     try {
         const application = await Application.findById(applicationId);
         if(!application) return res.status(404).json({message: 'Application not found'});

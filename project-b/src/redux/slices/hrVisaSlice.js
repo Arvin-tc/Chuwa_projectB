@@ -47,7 +47,13 @@ export const sendReminder = createAsyncThunk(
     async(applicationId, { rejectWithValue }) => {
         try {
 
-            const response = await axios.post(`http://localhost:${PORT}/api/hr/visa/${applicationId}/notify`);
+            const response = await axios.post(`http://localhost:${PORT}/api/hr/visa/${applicationId}/notify`, {}, 
+                {
+                    headers: {
+
+                        Authorization: `Bearer ${localStorage.getItem('jwt')}`
+                    }
+                });
             return response.data;
         } catch (err) {
             return rejectWithValue(err.message?.data?.message || 'Failed to send email reminder');
