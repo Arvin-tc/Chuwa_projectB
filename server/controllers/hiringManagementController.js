@@ -28,7 +28,7 @@ export const updateApplicationStatus = async (req, res) => {
         const application = await Application.findById(applicationId);
         if (!application) return res.status(404).json({message: 'Application not found'});
 
-        application.status = status;
+        application.appStatus= status;
         if ( status === 'Rejected' ) {
             application.feedback = feedback;
         }

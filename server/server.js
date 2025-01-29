@@ -11,6 +11,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import visaStatusRoutes from './routes/visaStatusRoutes.js';
 import hiringManagementRouter from './routes/hiringManagementRoutes.js';
 import hrVisaStatusRoutes from './routes/hrVisaStatusRoutes.js';
+import hrEmployeeRoutes from './routes/hrEmployeeRoutes.js';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
@@ -40,6 +41,7 @@ app.use('/sample', express.static(path.join(__dirname, 'sample')));
 // hr
 app.use('/api/hr', hiringManagementRouter);
 app.use('/api/hr/visa', hrVisaStatusRoutes);
+app.use('/api/hr/profiles', hrEmployeeRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

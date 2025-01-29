@@ -10,6 +10,8 @@ import VisaStatus from './pages/VisaStatus';
 import HrManagement from './pages/HrManagement';
 import ViewApplicationPage from './pages/HrApplicationDetails';
 import HRVisaManagementPage from './pages/HrVisaStatus';
+import HrEmployeeProfiles from './pages/HrEmployeeProfiles';
+import EmployeeProfileDetails from './pages/HrEmployeeDetailsInfo';
 
 const App = () => {
     return (
@@ -50,6 +52,22 @@ const App = () => {
                     }
                 />
                 <Route 
+                    path="/hr-profiles"
+                    element={
+                        <ProtectedRoute>
+                            <HrEmployeeProfiles/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route 
+                    path="/hr-profiles/employee/:id"
+                    element={
+                        <ProtectedRoute>
+                            <EmployeeProfileDetails />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route 
                     path="/hr-management"
                     element={
                         <ProtectedRoute>
@@ -57,7 +75,6 @@ const App = () => {
                         </ProtectedRoute>
                     }
                 />
-
                 <Route path="/application/:applicationId" element={<ViewApplicationPage />} />
             </Routes>
         </Router>

@@ -11,6 +11,7 @@ export const hrGetVisaApplications = async (req, res) => {
 
             return {
                 _id: app._id,
+                status: app.status,
                 details: app.details,
                 uploadedFiles: app.uploadedFiles,
                 pendingDocuments: getPendingDocuments(app),
@@ -87,35 +88,35 @@ const calculateNextStep = (application) => {
     const { uploadedFiles, status } = application;
 
     if (!uploadedFiles.optReceipt) {
-        return 'Upload OPT Receipt';
+        return 'Upload optReceipt';
     } else if (status === 'Rejected') {
-        return 'Re-upload OPT Receipt (Rejected by HR)';
+        return 'Re-upload optReceipt (Rejected by HR)';
     } else if ( status === 'Pending') {
-        return 'Wait for HR approval of OPT Receipt';
+        return 'Wait for HR approval of optReceipt';
     }
 
     if (!uploadedFiles.optEAD) {
-        return 'Upload OPT EAD';
+        return 'Upload optEAD';
     } else if ( status === 'Rejected') {
-        return 'Re-upload OPT EAD (Rejected by HR)';
+        return 'Re-upload optEAD (Rejected by HR)';
     } else if ( status === 'Pending') {
-        return 'Wait for HR approval of OPT EAD';
+        return 'Wait for HR approval of optEAD';
     }
 
     if (!uploadedFiles.i983) {
-        return 'Upload I-983';
+        return 'Upload i983';
     } else if ( status === 'Rejected') {
-        return 'Re-upload I-983 (Rejected by HR)';
+        return 'Re-upload i983 (Rejected by HR)';
     } else if ( status === 'Pending') {
-        return 'Wait for HR approval of I-983';
+        return 'Wait for HR approval of i983';
     }
 
     if (!uploadedFiles.i20) {
-        return 'Upload I-20';
+        return 'Upload i20';
     } else if ( status === 'Rejected') {
-        return 'Re-upload I-20 (Rejected by HR)';
+        return 'Re-upload i20 (Rejected by HR)';
     } else if ( status === 'Pending') {
-        return 'Wait for HR approval of I-20';
+        return 'Wait for HR approval of i20';
     }
 
     return 'All documents approved';

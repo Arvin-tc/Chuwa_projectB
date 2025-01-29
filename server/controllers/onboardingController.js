@@ -18,7 +18,7 @@ export const getOnboardingStatus = async (req, res) => {
         }
 
         res.json({
-            status: application.status,
+            status: application.appStatus,
             application: application.details,
             feedback: application.feedback || '',
             email: userEmail,

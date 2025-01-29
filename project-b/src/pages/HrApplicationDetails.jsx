@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchApplicationById, updateApplicationStatus } from '../redux/slices/hrManagementSlice';
 const PORT = 3001;
 
+
 const ViewApplicationPage = () => {
     const { applicationId } = useParams();
     const navigate = useNavigate();
