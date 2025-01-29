@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchVisaApplications, updateDocumentStatus, sendReminder } from '../redux/slices/hrVisaSlice';
+import Navbar from '../components/common/NavigationBar';
 const PORT = 3001;
 
 const HRVisaManagementPage = () => {
@@ -71,6 +72,8 @@ const HRVisaManagementPage = () => {
     console.log('fetched apps: ', applications);
     return (
         <div className="container mx-auto p-6">
+            <Navbar />
+            <p style={{ marginTop: '50px' }}></p>
             <h1 className="text-2xl font-bold mb-6">Visa Status Management</h1>
 
             {/* In-progress Employees Table */}

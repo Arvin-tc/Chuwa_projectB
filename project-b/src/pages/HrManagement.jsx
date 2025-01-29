@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTokenHistory, generateToken, fetchApplications, updateApplicationStatus } from '../redux/slices/hrManagementSlice';
+import Navbar from '../components/common/NavigationBar';
 
 const HiringManagementPage = () => {
     const dispatch = useDispatch();
@@ -39,6 +40,8 @@ const HiringManagementPage = () => {
 
     return (
         <div className="container mx-auto p-6">
+            <Navbar />
+            <p style={{ marginTop: '50px' }}></p>
             <h1 className="text-2xl font-bold mb-6">Hiring Management</h1>
 
             {/* Generate Token Section */}

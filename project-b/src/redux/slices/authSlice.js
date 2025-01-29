@@ -36,12 +36,9 @@ const authSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload.user;
+                state.user = {...action.payload.user, role: action.payload.role};
                 state.token = action.payload.token;
-
-                // Store the token in localStorage
-                // localStorage.setItem('jwt', action.payload.token);
-                // localStorage.setItem('user', JSON.stringify(action.payload.user));
+                localStorage.setItem('userRole', action.payload.role);
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;

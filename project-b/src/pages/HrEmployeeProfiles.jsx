@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchEmployeeProfiles } from '../redux/slices/hrEmployeeSlice';
+import Navbar from '../components/common/NavigationBar';
 
 const HrEmployeeProfiles = () => {
     const dispatch = useDispatch();
@@ -21,6 +22,8 @@ const HrEmployeeProfiles = () => {
 
     return (
         <div className="container mx-auto p-6">
+            <Navbar />
+            <p style={{ marginTop: '50px' }}></p>
             <h1 className="text-2xl font-bold mb-6">Employee Profiles</h1>
 
             {/* Search Bar */}
