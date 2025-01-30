@@ -35,6 +35,29 @@ const handleInputChange = (e) => {
     setFormData((prev) => {
         let updatedFormData = { ...prev, [name]: value };
 
+
+        // Validation rules
+        const stringFields = ["firstName", "lastName", "city", "state"];
+        const specialCharPattern = /[^a-zA-Z\s]/; // Only allows letters and spaces
+        const numberFields = ["zip", "cellPhone", "ssn"];
+
+        // Validate text fields (only letters and spaces allowed)
+        if (stringFields.includes(name) && specialCharPattern.test(value)) {
+            alert(`${name} should only contain letters and spaces.`);
+            return prev;
+        }
+
+        // Validate street (allows letters, numbers, and spaces but no special characters)
+        if (name === "street" && /[^a-zA-Z0-9\s]/.test(value)) {
+            alert("Street should not contain special characters.");
+            return prev;
+        }
+
+        // Validate number fields (only allow numeric input while typing)
+        if (numberFields.includes(name) && !/^\d*$/.test(value)) {
+            alert(`${name} should only contain numbers.`);
+            return prev;
+        }
         if (name === "isPermanentResident") {
             updatedFormData = {
                 ...updatedFormData,

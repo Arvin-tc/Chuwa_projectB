@@ -110,7 +110,12 @@ const hrManagementSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchApplications.fulfilled, (state, action) => {
-                state.applications = action.payload;
+                state.applications = [
+                    ...state.applications.filter(app => 
+                        !action.payload.some(newApp => newApp._id === app._id) // Prevent duplicates
+                    ), 
+                    ...action.payload
+                ];
                 state.loading = false;
             })
             .addCase(fetchApplications.rejected, (state, action) => {
