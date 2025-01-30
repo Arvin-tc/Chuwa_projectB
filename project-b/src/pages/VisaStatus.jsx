@@ -1,25 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchVisaStatus, uploadVisaDoc } from '../redux/slices/visaStatusSlice';
+import { fetchVisaStatus, uploadVisaDoc, updateVisaStatus } from '../redux/slices/visaStatusSlice';
 import Navbar from '../components/common/NavigationBar';
 const PORT = 3001;
 
 const VisaStatus = () => {
     const dispatch = useDispatch();
-    const { visaDocuments, status, feedback, loading, error } = useSelector((state) => state.visa);
+    const { appId, visaDocuments, status, feedback, loading, error } = useSelector((state) => state.visa);
     const [uploading, setUploading] = useState(null);
 
     useEffect(() => {
         dispatch(fetchVisaStatus());
     }, [dispatch]);
 
-    const handleUpload = (documentType, file) => {
-        setUploading(documentType);
-        dispatch(uploadVisaDoc({ documentType, file }));
+    const handleUpload = (fileType, file) => {
+        setUploading(fileType);
+        dispatch(uploadVisaDoc({ fileType, file }));
+        console.log('page appId:', appId);
+        dispatch(updateVisaStatus({ applicationId: appId, status: 'Pending'}));
         setUploading(null);
     };
 
-    const getDocumentMessage = (documentType) => {
+const getDocumentMessage = (documentType) => {
+        if(!visaDocuments) {
+            return 'Loading visa documents...';
+        }
+    const dependencies = {
+        optReceipt: null,
+        optEAD: 'optReceipt',
+        i983: 'optEAD',
+        i20: 'i983',
+    };
+    const documentTypes = Object.keys(dependencies);
+    const currentIndex = documentTypes.indexOf(documentType);
+    const nextDocType = documentTypes[currentIndex + 1]; 
+    const nextDocUploaded = nextDocType ? visaDocuments[nextDocType] : null; 
+    // console.log('nextDoc:', nextDocUploaded);
+        if(nextDocUploaded) {
+
+            return `${documentType} is approved by HR`;
+    }
+
         const document = visaDocuments[documentType];
         if (!document) {
             return `Please upload your ${documentType.replace(/([A-Z])/g, ' $1')}`;
@@ -37,7 +58,7 @@ const VisaStatus = () => {
                 case 'optEAD':
                     return 'Please download and fill out the I-983 form.';
                 case 'i983':
-                    return 'Please send the I-983 along with all necessary documents to your school and upload the new I-20.';
+                    return 'Please upload the new I-20.';
                 case 'i20':
                     return 'All documents have been approved.';
                 default:
@@ -46,37 +67,55 @@ const VisaStatus = () => {
         }
     };
 
-    const getDependency = (docType) => {
-        const dependencies = {
-            optReceipt: null,
-            optEAD: 'optReceipt',
-            i983: 'optEAD',
-            i20: 'i983',
-        };
+    
+const getDependency = (docType) => {
+    const dependencies = {
+        optReceipt: null,
+        optEAD: 'optReceipt',
+        i983: 'optEAD',
+        i20: 'i983',
+    };
+
+    let dependency = dependencies[docType];
 
 
-        const dependency = dependencies[docType];
-        console.log('dependency: ', dependency);
-        if(!dependency) return null;
+    const dependencyDoc = visaDocuments[dependency]; // Check if dependency document is uploaded
 
-        const dependencyDoc = visaDocuments[dependency];
-        if(!dependencyDoc) {
-            return `${dependency.replace(/([A-Z])/g, '$1')} must be uploaded first.` ;
-        }
-        if(status !== 'Approved'){
-
-            return `${dependency.replace(/([A-Z])/g, '$1')} must be approved by HR first.`;
-        }
-        // return !dependencyDoc || status !== 'Approved';
-        return null;
+    // Find the next document in the sequence
+    const documentTypes = Object.keys(dependencies);
+    const currentIndex = documentTypes.indexOf(docType);
+    const nextDocType = documentTypes[currentIndex + 1]; // Get next document type
+    const nextDocUploaded = nextDocType ? visaDocuments[nextDocType] : null; // Check if next doc is uploaded
+    // console.log('nextDoc:', nextDocUploaded);
+    if(nextDocUploaded) {
+        return `${docType} is already approved`;
     }
+
+    if (!dependency) return null; // No dependency for optReceipt
+
+
+
+    // If the required dependency is missing, return a message
+    if (!dependencyDoc) {
+        return `${dependency.replace(/([A-Z])/g, ' $1')} must be uploaded first.`;
+    }
+
+    // If the dependency is uploaded but not yet approved, return an approval message
+    if (status !== 'Approved' && !visaDocuments[docType]) {
+        return `${dependency.replace(/([A-Z])/g, ' $1')} must be approved by HR first.`;
+    }
+
+
+    return null; // No issues, return null
+};
+
 
 
 
     const renderFileActions = (docType) => (
         <>
             <a
-                href={`http://localhost:${PORT}/uploads/${visaDocuments[docType]}`}
+                href={`http://localhost:${PORT}/uploads/${visaDocuments[docType].split('/').pop()}`}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='text-blue-600 underline mr-4'
@@ -99,8 +138,7 @@ const VisaStatus = () => {
         </>
     );
 
-    const renderI983Templates = () => {
-        const msg = getDependency('i983');
+    const renderI983Templates = (documentMessage,dependencyMessage, isApproved) => {
         return (
         <>
             <div className='mb-4'>
@@ -136,59 +174,92 @@ const VisaStatus = () => {
             accept='image/jpeg,image/png,application/pdf'
 
                                 onClick={(e) => {
-                                    if(msg) {
-                                        alert(msg);
+                                    if(dependencyMessage || isApproved) {
+                                        alert(dependencyMessage || documentMessage);
                                         e.preventDefault();
                                     }
                                 }}
-  className={`block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 ${
-        getDependency('i983') ? 'opacity-50 cursor-not-allowed' : ''
-    }`}
-           /> 
+                                onChange={(event) =>
+                                    handleUpload('i983', event.target.files[0])
+                                }
+                                  className={`block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0
+                                    file:text-sm file:bg-blue-100 file:text-blue-700
+                                    hover:file:bg-blue-200 ${
+                                        dependencyMessage || isApproved ? 'opacity-50 cursor-not-allowed' : ''
+                                    }`}           /> 
         </>
 );
     };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
+    if (!visaDocuments) {
+        return <p>File Uploaded!</p>;
+    }
+
 
 return (
-        <div className="container mx-auto p-6">
-            <Navbar />
-            <p style={{ marginTop: '50px' }}/>
-            <h1 className="text-2xl font-bold mb-6">Visa Status Management</h1>
-            <div className="bg-white p-6 rounded-md shadow-md space-y-6">
-                {['optReceipt', 'optEAD', 'i983', 'i20'].map((docType) => (
+    <div className="container mx-auto p-6">
+        <Navbar />
+        <p style={{ marginTop: '50px' }} />
+        <h1 className="text-2xl font-bold mb-6">Visa Status Management</h1>
+
+        <div className="bg-white p-6 rounded-md shadow-md space-y-6">
+    {['optReceipt', 'optEAD', 'i983', 'i20'].map((docType) => {
+
+                const documentMessage = getDocumentMessage(docType);
+                const isI983 = docType === 'i983';
+                const isUploading = uploading === docType;
+                let isApproved = status === 'Approved';
+                const fileExists = visaDocuments[docType];
+                if(!fileExists) isApproved = false;
+                const dependencyMessage = getDependency(docType);
+                console.log(`docType: ${docType}, documentMessage: ${documentMessage}, dependencyMessage: ${dependencyMessage}, fileExists:${fileExists}, isApproved:${isApproved}`);
+                return (
                     <div key={docType} className="mb-6">
-                        <h2 className="text-lg font-bold capitalize">{docType.replace(/([A-Z])/g, ' $1')}</h2>
-                        <p className="mb-2 text-sm text-gray-600">{getDocumentMessage(docType)}</p>
-                        {visaDocuments[docType] && docType !== 'i983' && (
+                        <h2 className="text-lg font-bold capitalize">
+                            {docType}
+                        </h2>
+                        <p className="mb-2 text-sm text-gray-600">{documentMessage}</p>
+
+                        {fileExists && !isI983 && (
                             <div className="flex items-center mb-4">{renderFileActions(docType)}</div>
                         )}
-                        {docType === 'i983' ? renderI983Templates() : (
-                            (!visaDocuments[docType] || status !== 'Approved') && !uploading && (
-                                <input
-                                    type="file"
-                                    accept="image/jpeg,image/png,application/pdf"
+
+                    {isI983 ? (
+
+                        renderI983Templates(documentMessage, dependencyMessage, isApproved)
+                        ) : 
+                        !uploading && (
+                            <input
+                                type="file"
+                                accept="image/jpeg,image/png,application/pdf"
                                 onClick={(e) => {
-                                    const msg = getDependency(docType);
-                                    if(msg){
+                                    if (dependencyMessage || isApproved ) {
                                         e.preventDefault();
-                                        alert(msg);
+                                        alert(dependencyMessage || documentMessage);
                                     }
                                 }}
-                                    onChange={(event) => handleUpload(docType, event.target.files[0])}
-className={`block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 ${
-        getDependency(docType) ? 'opacity-50 cursor-not-allowed' : ''
-    }`}
-                                />
-                            )
+                                onChange={(event) =>
+                                    handleUpload(docType, event.target.files[0])
+                                }
+                                className={`block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0
+                                    file:text-sm file:bg-blue-100 file:text-blue-700
+                                    hover:file:bg-blue-200 ${
+                                        dependencyMessage || isApproved ? 'opacity-50 cursor-not-allowed' : ''
+                                    }`}
+                            />
                         )}
-                        {uploading === docType && <p className="text-sm text-blue-500">Uploading...</p>}
+
+                        {isUploading && <p className="text-sm text-blue-500">Uploading...</p>}
                     </div>
-                ))}
-            </div>
+                );
+            })}
         </div>
-    );
+    </div>
+);
+
 };
 export default VisaStatus;

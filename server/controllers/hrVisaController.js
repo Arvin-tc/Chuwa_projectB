@@ -85,43 +85,51 @@ export const hrSendEmailNotification = async(req, res) => {
     }
 };
 
+
+
+
+
 const calculateNextStep = (application) => {
     const { uploadedFiles, status } = application;
 
-    if (!uploadedFiles.optReceipt) {
-        return 'Upload optReceipt';
-    } else if (status === 'Rejected') {
-        return 'Re-upload optReceipt (Rejected by HR)';
-    } else if ( status === 'Pending') {
-        return 'Wait for HR approval of optReceipt';
-    }
 
-    if (!uploadedFiles.optEAD) {
-        return 'Upload optEAD';
-    } else if ( status === 'Rejected') {
-        return 'Re-upload optEAD (Rejected by HR)';
-    } else if ( status === 'Pending') {
-        return 'Wait for HR approval of optEAD';
-    }
+    const documentTypes = ['optReceipt', 'optEAD', 'i983', 'i20'];
 
-    if (!uploadedFiles.i983) {
-        return 'Upload i983';
-    } else if ( status === 'Rejected') {
-        return 'Re-upload i983 (Rejected by HR)';
-    } else if ( status === 'Pending') {
-        return 'Wait for HR approval of i983';
-    }
+    for (let i = 0; i < documentTypes.length; i++) {
+        const docType = documentTypes[i];
 
-    if (!uploadedFiles.i20) {
-        return 'Upload i20';
-    } else if ( status === 'Rejected') {
-        return 'Re-upload i20 (Rejected by HR)';
-    } else if ( status === 'Pending') {
-        return 'Wait for HR approval of i20';
+        if (!uploadedFiles[docType]) {
+            return `Upload ${docType}`;
+        }
+
+        const nextIndex = i + 1;
+        const nextDocType = nextIndex < documentTypes.length ? documentTypes[nextIndex] : null;
+        const nextDocExists = nextDocType && uploadedFiles[nextDocType];
+
+        console.log(`docType:${docType}, nextDocType:${nextDocType}, nextDocExists:${nextDocExists}`);
+        if (status === 'Pending' && nextDocExists) {
+            continue;
+        }
+
+        if (status === 'Pending' && !nextDocExists) {
+            return `Wait for HR approval of ${docType}`;
+        }
+
+        if (status === 'Rejected' && !nextDocExists) {
+            return `Re-upload ${docType} (Rejected by HR)`;
+        }
+
+        if (status === 'Rejected' && nextDocExists) {
+            continue
+        }
     }
 
     return 'All documents approved';
 };
+
+
+
+
 
 const calculateDaysRemaining = (visaEndDate) => {
     if(!visaEndDate) return 'Unknown';

@@ -11,7 +11,7 @@ export const fetchVisaStatus = createAsyncThunk(
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`,
                 },
             });
-            console.log('fetch visa slice response:', response.data);
+            // console.log('fetch visa slice response:', response.data);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data || 'Error fetching visa status');
@@ -19,18 +19,24 @@ export const fetchVisaStatus = createAsyncThunk(
     }
 );
 
+
 export const uploadVisaDoc = createAsyncThunk(
     'visa/uploadDoc',
     async ({ fileType, file }, { rejectWithValue }) => {
         try {
+        console.log('doctype:', fileType);
+        console.log('file:', file);
+            if (!fileType || !file) {
+                throw new Error('Missing fileType or file.');
+            }
+
             const formData = new FormData();
             formData.append('fileType', fileType);
             formData.append('file', file);
             formData.append('isVisaDoc', true);
 
-            const response = await axios.patch(`http://localhost:${POST}/api/upload`, formData, {
+            const response = await axios.patch(`http://localhost:${PORT}/api/uploads`, formData, {
                 headers: {
-                    
                     Authorization: `Bearer ${localStorage.getItem('jwt')}`,
                     'Content-Type': 'multipart/form-data',
                 },
@@ -38,14 +44,34 @@ export const uploadVisaDoc = createAsyncThunk(
 
             return { fileType, ...response.data };
         } catch (error) {
-            return rejectWithValue(error.response.data || 'Error uploading document');
+            console.error('Visa upload failed:', error);
+            return rejectWithValue(error.response?.data || { message: 'Error uploading document' });
         }
     }
 );
 
+export const updateVisaStatus = createAsyncThunk(
+    'visa/updateVisaStatus',
+    async ({ applicationId, status }, { rejectWithValue }) => {
+        try {
+            console.log('reducer:', applicationId);
+            const response = await axios.patch(`http://localhost:${PORT}/api/visa/${applicationId}`, { status },{
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || { message: 'Error update document status' });
+        }
+    }
+);
+
+
 const visaSlice = createSlice({
     name: 'visa',
     initialState: {
+        appId: null,
         visaDocuments: {},
         status: null,
         feedback: null,
@@ -64,6 +90,7 @@ const visaSlice = createSlice({
                 state.visaDocuments = action.payload.visaDocument;
                 state.status = action.payload.status;
                 state.feedback = action.payload.feedback;
+                state.appId = action.payload.appId;
             })
             .addCase(fetchVisaStatus.rejected, (state, action) => {
                 state.loading = false;
@@ -75,7 +102,18 @@ const visaSlice = createSlice({
             })
             .addCase(uploadVisaDoc.rejected, (state, action) => {
                 state.error = action.payload;
-            });
+            })
+            .addCase(updateVisaStatus.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateVisaStatus.fulfilled, (state, action) => {
+                state.loading = false;
+                state.status = action.payload.status;
+            })
+            .addCase(updateVisaStatus.rejected, (state, action) => {
+                state.error = action.payload;
+            })
     },
 });
 

@@ -15,7 +15,7 @@ const Navbar = () => {
         navigate('/login');
     };
 
-    console.log('navbar user role:', userRole);
+    // console.log('navbar user role:', userRole);
     return (
         <nav className='bg-blue-700 text-white py-2'>
             <div className='container mx-auto flex justify-between items-center'>
