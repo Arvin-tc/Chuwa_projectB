@@ -25,7 +25,9 @@ const App = () => {
                     path="/onboarding"
                     element={
                         <ProtectedRoute>
+                            <AuthProtect role = 'employee'>
                             <Onboarding />
+                            </AuthProtect>
                         </ProtectedRoute>
                     }
                 />
@@ -33,7 +35,9 @@ const App = () => {
                     path="/personal-info"
                     element={
                         <ProtectedRoute>
+                            <AuthProtect role = 'employee'>
                             <PersonalInfo />
+                            </AuthProtect>
                         </ProtectedRoute>
                     }
                 />
@@ -41,7 +45,9 @@ const App = () => {
                     path="/visa-status"
                     element={
                         <ProtectedRoute>
+                            <AuthProtect role = 'employee'>
                             <VisaStatus />
+                            </AuthProtect>
                         </ProtectedRoute>
                     }
                 />

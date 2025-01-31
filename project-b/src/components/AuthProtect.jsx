@@ -10,8 +10,14 @@ const AuthProtect = ({ children, role }) => {
         return <Navigate to="/login" replace/>;
     }
 
-    if (role && userRole !== role) {
-        return <Navigate to="/login" replace/>;
+
+
+    if (role && userRole !== role && userRole == 'hr') {
+        return <Navigate to="/hr-management" replace/>;
+    }
+
+    if (role && userRole !== role && userRole == 'employee') {
+        return <Navigate to="/onboarding" replace/>;
     }
 
     return children;
