@@ -124,7 +124,7 @@ const HiringManagementPage = () => {
                                 </thead>
                                 <tbody>
                                     {applications
-                                        .filter((app) => app.status === status)
+                                        .filter((app) => app.appStatus === status)
                                         .map((application) => (
                                             <tr key={application._id}>
                                                 <td className="border border-gray-300 px-4 py-2">{`${application.details.firstName} ${application.details.lastName}`}</td>

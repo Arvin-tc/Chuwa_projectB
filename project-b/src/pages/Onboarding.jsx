@@ -177,6 +177,13 @@ return (
         <p style={{ marginTop: '50px' }}></p>
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Onboarding Application</h1>
         
+        {/* Status: Approved */}
+        {status === 'Approved' && (
+            <div className="bg-yellow-100 text-yellow-800 p-4 rounded-md mb-6">
+                <p className="text-lg">Your application is approved! </p>
+            </div>
+        )}
+
         {/* Status: Pending */}
         {status === 'Pending' && (
             <div className="bg-yellow-100 text-yellow-800 p-4 rounded-md mb-6">

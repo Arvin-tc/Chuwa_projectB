@@ -13,7 +13,8 @@ export const getTokenHistory = async (req, res) => {
 export const getApplicationByStatus = async (req, res) => {
     const { status } = req.params;
     try {
-        const applications = await Application.find({status}).populate('userId', 'userEmail');
+        
+        const applications = await Application.find({appStatus: status}).populate('userId', 'userEmail');
         res.json(applications);
     } catch (err) {
         res.status(500).json({message: `Server Error: ${err}`});

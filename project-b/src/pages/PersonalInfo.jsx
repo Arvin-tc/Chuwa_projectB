@@ -92,21 +92,30 @@ const PersonalInfo = () => {
                 <EditableField
                     label="First Name"
                     value={details.firstName}
-                    onChange={(value) => handleUpdate('firstName', value)}
+                    onChange={(value) => {
+                            if(/^[a-zA-Z\s]*$/.test(value)){
+                            handleUpdate('firstName', value);
+                            } else {
+                                alert('Only letters and spaces are allowed');
+                            }
+                        }
+                    }
+
                     isEditable
                 />
                 <EditableField
                     label="Last Name"
                     value={details.lastName}
-                    onChange={(value) => handleUpdate('lastName', value)}
+        onChange={(value) => {
+            if(/^[a-zA-Z\s]*$/.test(value)) {
+                handleUpdate('lastName', value);
+            } else {
+                alert('Only letters and spaces are allowed');
+            }
+        }}
                     isEditable
                 />
-                <EditableField
-                    label="Cell Phone"
-                    value={details.cellPhone}
-                    onChange={(value) => handleUpdate('cellPhone', value)}
-                    isEditable
-                />
+ 
                 <EditableField
                     label="Gender"
                     value={details.gender}
@@ -115,16 +124,17 @@ const PersonalInfo = () => {
                     options={['Male', 'Female', 'Prefer not to say']}
                     isEditable
                 />
-                <EditableField
-                    label="Citizenship"
-                    value={details.citizenship}
-                    onChange={(value) => handleUpdate('citizenship', value)}
-                    isEditable
-                />
+
                 <EditableField
                     label="SSN"
                     value={details.ssn}
-                    onChange={(value) => handleUpdate('ssn', value)}
+                    onChange={(value) => {
+                        if(/^\d{9}$/.test(value)) {
+                        handleUpdate('ssn', value)
+                        } else {
+                            alert('SSN must be 9 numbers');
+                        }}
+                    }
                     isEditable
                 />
                 <EditableField
@@ -157,13 +167,24 @@ const PersonalInfo = () => {
                             type="date"
                             isEditable
                         />
-                        <EditableField
-                            label="End Date"
-                            value={details.visaEndDate ? details.visaEndDate.split('T')[0] : ''}
-                            onChange={(value) => handleUpdate('visaEndDate', value)}
-                            type="date"
-                            isEditable
-                        />
+<EditableField
+    label="End Date"
+    value={details.visaEndDate ? details.visaEndDate.split('T')[0] : ''}
+    onChange={(value) => {
+        const selectedDate = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate > today) { 
+            handleUpdate('visaEndDate', value);
+        } else {
+            alert("End Date must be earlier than today.");
+        }
+    }}
+    type="date"
+    isEditable
+    max={new Date().toISOString().split('T')[0]}  // Disables future dates
+/>
                     </div>
                 )}
         </div>
@@ -186,10 +207,16 @@ const PersonalInfo = () => {
                 <div className="mb-6">
                     <h2 className="text-lg font-bold">Contact Info</h2>
 
-                <EditableField
+               <EditableField
                     label="Cell Phone"
                     value={details.cellPhone}
-                    onChange={(value) => handleUpdate('cellPhone', value)}
+        onChange={(value) => {
+            if(/^\d{10}$/.test(value) ) {
+                handleUpdate('cellPhone', value);
+            } else {
+                alert('Cell phone must be 10 numbers');
+            }
+        }}
                     isEditable
                 />
 

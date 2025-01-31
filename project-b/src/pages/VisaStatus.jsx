@@ -195,7 +195,23 @@ const getDependency = (docType) => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (!visaDocuments) {
-        return <p>File Uploaded!</p>;
+        return (
+            <div className="flex h-screen items-center justify-center bg-gray-100">
+                <div className="bg-white shadow-lg rounded-2xl p-6 flex flex-col items-center">
+                    <svg className="w-16 h-16 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <h2 className="text-xl font-semibold text-gray-700 mt-4">File Uploaded Successfully!</h2>
+                    <p className="text-gray-500 mt-2">Your visa documents have been uploaded.</p>
+                    <button 
+                        className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all"
+                        onClick={() => window.location.reload()}
+                    >
+                        Go back
+                    </button>
+                </div>
+            </div>
+        );
     }
 
 
