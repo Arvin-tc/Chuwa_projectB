@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Onboarding from './pages/Onboarding';
 import PersonalInfo from './pages/PersonalInfo';
 import ProtectedRoute from './components/ProtectedRoute';
+import AuthProtect from './components/AuthProtect';
 import './index.css';
 import VisaStatus from './pages/VisaStatus';
 import HrManagement from './pages/HrManagement';
@@ -17,6 +18,7 @@ const App = () => {
     return (
         <Router>
             <Routes>
+                <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register/:token" element={<Register />} />
                 <Route 
@@ -47,7 +49,9 @@ const App = () => {
                     path="/hr-visa"
                     element={
                         <ProtectedRoute>
-                            <HRVisaManagementPage/>
+                            <AuthProtect role = 'hr'>
+                                <HRVisaManagementPage/>
+                            </AuthProtect>
                         </ProtectedRoute>
                     }
                 />
@@ -55,7 +59,9 @@ const App = () => {
                     path="/hr-profiles"
                     element={
                         <ProtectedRoute>
-                            <HrEmployeeProfiles/>
+                            <AuthProtect role = 'hr'>
+                                <HrEmployeeProfiles/>
+                            </AuthProtect>
                         </ProtectedRoute>
                     }
                 />
@@ -63,7 +69,9 @@ const App = () => {
                     path="/hr-profiles/employee/:id"
                     element={
                         <ProtectedRoute>
-                            <EmployeeProfileDetails />
+                            <AuthProtect role = 'hr'>
+                                <EmployeeProfileDetails />
+                            </AuthProtect>
                         </ProtectedRoute>
                     }
                 />
@@ -71,7 +79,9 @@ const App = () => {
                     path="/hr-management"
                     element={
                         <ProtectedRoute>
-                            <HrManagement />
+                            <AuthProtect role = 'hr'>
+                                <HrManagement />
+                            </AuthProtect>
                         </ProtectedRoute>
                     }
                 />

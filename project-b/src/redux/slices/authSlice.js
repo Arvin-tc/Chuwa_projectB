@@ -7,6 +7,7 @@ export const login = createAsyncThunk('auth/login', async (credentials, { reject
         const response = await axios.post('http://localhost:3001/auth/login', credentials);
         const { token, role } = response.data;
         localStorage.setItem('jwt', token);
+        localStorage.setItem('userRole', role)
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -18,14 +19,16 @@ const authSlice = createSlice({
     initialState: {
         user: null,
         token: localStorage.getItem('jwt') || null,
+        role:localStorage.getItem('userRole') || null,
         loading: false,
         error: null,
     },
     reducers: {
         logout: (state) => {
-            state.user = null;
             state.token = null;
+            state.role = null;
             localStorage.removeItem('jwt');
+            localStorage.removeItem('userRole');
         },
     },
     extraReducers: (builder) => {
@@ -38,6 +41,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = {...action.payload.user, role: action.payload.role};
                 state.token = action.payload.token;
+                state.role = action.payload.role;
                 localStorage.setItem('userRole', action.payload.role);
             })
             .addCase(login.rejected, (state, action) => {
@@ -46,6 +50,8 @@ const authSlice = createSlice({
             });
     },
 });
+
+
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;
