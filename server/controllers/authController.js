@@ -42,12 +42,14 @@ export const sendRegistrationEmail = async (req, res) => {
             },
         });
 
-        const mailOptions = {
-            from: '"HR Portal" <no-reply@hrportal.com>',
-            to: email,
-            subject: 'Employee Registration Link',
-            text: `Hello ${name || ''}, Click the link below to register:\n\nhttp://localhost:5173/register/${token}`,
-        };
+const mailOptions = {
+    from: '"HR Portal" <no-reply@hrportal.com>',
+    to: email,
+    subject: 'Employee Registration Link',
+    html: `<p>Hello ${name || ''},</p>
+           <p>Click the link below to register:</p>
+           <p><a href="http://localhost:5173/register/${token}" target="_blank">Register Here</a></p>`,
+};
 
         await transporter.sendMail(mailOptions);
         res.json({ message: 'Registration email sent' });
