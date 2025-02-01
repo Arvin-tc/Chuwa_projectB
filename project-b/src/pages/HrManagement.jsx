@@ -130,34 +130,7 @@ const HiringManagementPage = () => {
                                                 <td className="border border-gray-300 px-4 py-2">{`${application.details.firstName} ${application.details.lastName}`}</td>
                                                 <td className="border border-gray-300 px-4 py-2">{application.userEmail}</td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    {status === 'Pending' ? (
-                                                        <div className="flex space-x-2">
-                                                            <button
-                                                                onClick={() =>
-                                                                    handleStatusUpdate(
-                                                                        application._id,
-                                                                        'Approved'
-                                                                    )
-                                                                }
-                                                                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                                                            >
-                                                                Approve
-                                                            </button>
-                                                            <button
-                                                                onClick={() => {
-                                                                    const feedback = prompt('Enter feedback:');
-                                                                    handleStatusUpdate(
-                                                                        application._id,
-                                                                        'Rejected',
-                                                                        feedback
-                                                                    );
-                                                                }}
-                                                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                                                            >
-                                                                Reject
-                                                            </button>
-                                                        </div>
-                                                    ) : (
+                                                    {(
                                                         <button
                                                             onClick={() =>
                                                                 window.open(

@@ -15,6 +15,7 @@ export const hrGetVisaApplications = async (req, res) => {
                 details: app.details,
                 uploadedFiles: app.uploadedFiles,
                 pendingDocuments: getPendingDocuments(app),
+                appStatus: app.appStatus,
                 nextStep,
                 daysRemaining,
             };

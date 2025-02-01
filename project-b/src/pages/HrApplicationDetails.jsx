@@ -76,27 +76,43 @@ const ViewApplicationPage = () => {
                         ))}
                     </ul>
 
-                    <h2 className="text-lg font-bold">Actions</h2>
-                    <textarea
-                        placeholder="Provide feedback for rejection (if applicable)"
-                        value={feedback}
-                        onChange={(e) => setFeedback(e.target.value)}
-                        className="w-full p-2 border rounded-md mb-4"
-                    />
-                    <div className="flex space-x-4">
-                        <button
-                            onClick={() => handleStatusUpdate('Approved')}
-                            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                        >
-                            Approve
-                        </button>
-                        <button
-                            onClick={() => handleStatusUpdate('Rejected')}
-                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                        >
-                            Reject
-                        </button>
-                    </div>
+
+<>
+    {application.appStatus === 'Pending' && (
+        <div>
+            <h2 className="text-lg font-bold">Actions</h2>
+            <textarea
+                placeholder="Provide feedback for rejection (if applicable)"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                className="w-full p-2 border rounded-md mb-4"
+            />
+
+<div className="flex space-x-4">
+    <button
+        onClick={() => {
+            alert("Application Approved!");
+            handleStatusUpdate('Approved');
+        }}
+        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+    >
+        Approve
+    </button>
+    <button
+        onClick={() => {
+            alert("Application Rejected!");
+            handleStatusUpdate('Rejected');
+        }}
+        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+    >
+        Reject
+    </button>
+</div>
+
+        </div>
+    )}
+</>
+
                 </div>
             ) : (
                 <p>No application data found.</p>

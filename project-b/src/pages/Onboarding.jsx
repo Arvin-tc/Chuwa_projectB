@@ -234,17 +234,6 @@ return (
 
     {/* Address */}
     <div className="mb-4">
-        <label htmlFor="apt" className="block text-sm font-medium text-gray-700">Apt*</label>
-        <input
-            type="text"
-            id="apt"
-            name="apt"
-            value={formData.apt|| ''}
-            onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-        />
-    </div>
-    <div className="mb-4">
         <label htmlFor="street" className="block text-sm font-medium text-gray-700">Street *</label>
         <input
             type="text"
@@ -255,6 +244,18 @@ return (
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
     </div>
+    <div className="mb-4">
+        <label htmlFor="apt" className="block text-sm font-medium text-gray-700">Apt*</label>
+        <input
+            type="text"
+            id="apt"
+            name="apt"
+            value={formData.apt|| ''}
+            onChange={handleInputChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        />
+    </div>
+
     <div className="mb-4">
         <label htmlFor="city" className="block text-sm font-medium text-gray-700">City *</label>
         <input

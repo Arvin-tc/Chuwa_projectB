@@ -11,7 +11,7 @@ const HRVisaManagementPage = () => {
 
     useEffect(() => {
         dispatch(fetchVisaApplications());
-    }, [dispatch]);
+    }, [refetch]);
 
     const handleApprove = (applicationId, documentType) => {
         dispatch(updateDocumentStatus({ applicationId, documentType, status: 'Approved' }));
@@ -32,42 +32,54 @@ const HRVisaManagementPage = () => {
         `${app.details.firstName} ${app.details.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const renderDocumentLinks = (uploadedFiles, currentStatus) => {
-        const fileSequence = ['optReceipt', 'optEAD', 'i983', 'i20'];
 
-        // Find the last file that is logically valid based on current status
-        const lastValidIndex = fileSequence.findIndex((file) => !uploadedFiles[file]);
-        const validFiles = fileSequence.slice(0, lastValidIndex + (currentStatus === 'Approved' ? 1 : 0));
 
-        // Render links for valid files, excluding rejected ones
-        return validFiles
-            .filter((fileKey) => uploadedFiles[fileKey] && currentStatus !== 'Rejected')
-            .map((fileKey) => (
-                <div key={fileKey} className="mb-2">
-                    <a
-                        href={`http://localhost:3001/uploads/${uploadedFiles[fileKey]}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 underline mr-4"
-                    >
-                        Preview {fileKey.replace(/([A-Z])/g, ' $1')}
-                    </a>
-                    <button
-                        onClick={() => {
-                            const link = document.createElement('a');
-                            link.href = `http://localhost:${PORT}/uploads/${uploadedFiles[fileKey]}`;
-                            link.download = uploadedFiles[fileKey];
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                        }}
-                        className="text-blue-600 underline"
-                    >
-                        Download
-                    </button>
-                </div>
-            ));
-    };
+const renderDocumentLinks = (uploadedFiles, currentFileStatus) => {
+    const fileSequence = ['optReceipt', 'optEAD', 'i983', 'i20'];
+
+    // Find the last uploaded file
+    let lastValidIndex = fileSequence.findIndex((file) => !uploadedFiles[file]);
+    if (lastValidIndex === -1) lastValidIndex = fileSequence.length; // All files exist
+
+    // Determine which files are approved
+    const validFiles = fileSequence.slice(0, lastValidIndex);
+    if (currentFileStatus === 'Approved' && lastValidIndex < fileSequence.length) {
+        validFiles.push(fileSequence[lastValidIndex]); // Include current file only if approved
+    }
+
+    console.log(`Last valid index: ${lastValidIndex}, Valid Files: ${validFiles}`);
+
+    // Render links for valid files, excluding rejected ones
+    return validFiles
+        .filter((fileKey) => uploadedFiles[fileKey]) // Ensure file exists
+        .map((fileKey) => (
+            <div key={fileKey} className="mb-2">
+                <a
+                    href={`http://localhost:3001/uploads/${uploadedFiles[fileKey].split('/').pop()}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline mr-4"
+                >
+                    Preview {fileKey.replace(/([A-Z])/g, ' $1')}
+                </a>
+                <button
+                    onClick={() => {
+                        const link = document.createElement('a');
+                        link.href = `http://localhost:3001/uploads/${uploadedFiles[fileKey].split('/').pop()}`;
+                        link.download = uploadedFiles[fileKey];
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }}
+                    className="text-blue-600 underline"
+                >
+                    Download
+                </button>
+            </div>
+        ));
+};
+
+
 
     console.log('fetched apps: ', applications);
     return (
@@ -101,10 +113,11 @@ const HRVisaManagementPage = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {applications.map((app) => (
+                                {applications.map((app) => (app.appStatus === 'Pending') && (
                                     <tr key={app._id}>
                                         <td className="border border-gray-300 px-4 py-2">
                                             {`${app.details.firstName} ${app.details.lastName}`}
+                    
                                         </td>
                                         <td className="border border-gray-300 px-4 py-2">{app.details.visaType}</td>
                                         <td className="border border-gray-300 px-4 py-2">
@@ -193,7 +206,7 @@ const HRVisaManagementPage = () => {
                                         <td className="border border-gray-300 px-4 py-2">
                                             {`${app.details.firstName} ${app.details.lastName}`}
                                         </td>
-                                        <td className="border border-gray-300 px-4 py-2">{app.details.citizenship}</td>
+                                        <td className="border border-gray-300 px-4 py-2">{app.details.visaType}</td>
                                         <td className="border border-gray-300 px-4 py-2">
                                             {app.details.visaStartDate ? new Date(app.details.visaStartDate).toLocaleDateString() : 'N/A'}
                                         </td>

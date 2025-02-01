@@ -43,10 +43,10 @@ const getDocumentMessage = (documentType) => {
 
         const document = visaDocuments[documentType];
         if (!document) {
-            return `Please upload your ${documentType.replace(/([A-Z])/g, ' $1')}`;
+            return `Please upload your ${documentType}`;
         }
         if (status === 'Pending') {
-            return `Waiting for HR to approve your ${documentType.replace(/([A-Z])/g, ' $1')}`;
+            return `Waiting for HR to approve your ${documentType}`;
         }
         if (status === 'Rejected') {
             return `HR Feedback: ${feedback || 'No feedback provided'}`;
@@ -97,16 +97,16 @@ const getDependency = (docType) => {
 
     // If the required dependency is missing, return a message
     if (!dependencyDoc) {
-        return `${dependency.replace(/([A-Z])/g, ' $1')} must be uploaded first.`;
+        return `${dependency} must be uploaded first.`;
     }
 
     // If the dependency is uploaded but not yet approved, return an approval message
     if (status !== 'Approved' && !visaDocuments[docType]) {
-        return `${dependency.replace(/([A-Z])/g, ' $1')} must be approved by HR first.`;
+        return `${dependency} must be approved by HR first.`;
     }
 
 
-    return null; // No issues, return null
+    return null; 
 };
 
 

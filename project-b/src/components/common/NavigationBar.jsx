@@ -17,7 +17,7 @@ const Navbar = () => {
 
     // console.log('navbar user role:', userRole);
     return (
-        <nav className='bg-blue-700 text-white py-2'>
+        <nav className='px-5 py-5 bg-blue-700 text-white py-2'>
             <div className='container mx-auto flex justify-between items-center'>
                 <div className='flex space-x-6'>
                     {userRole === 'hr' ? (
